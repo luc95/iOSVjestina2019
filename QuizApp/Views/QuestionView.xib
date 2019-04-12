@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QuestionView" customModule="QuizApp" customModuleProvider="target">
+            <connections>
+                <outlet property="questionLabel" destination="JPr-qr-Eza" id="Ljn-wW-d6e"/>
+                <outlet property="questionView" destination="iN0-l3-epB" id="Ugf-iI-hGJ"/>
+                <outletCollection property="answerButtons" destination="iuD-fd-3c9" collectionClass="NSMutableArray" id="STV-q2-PLi"/>
+                <outletCollection property="answerButtons" destination="tmb-2v-biE" collectionClass="NSMutableArray" id="W60-as-ZOq"/>
+                <outletCollection property="answerButtons" destination="FmC-GH-1VH" collectionClass="NSMutableArray" id="JIy-1u-fd1"/>
+                <outletCollection property="answerButtons" destination="Uhu-K5-5KC" collectionClass="NSMutableArray" id="gbu-P8-rK0"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="352" height="238"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JPr-qr-Eza">
+                    <rect key="frame" x="56" y="60" width="240" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="bwH-6x-0GU"/>
+                        <constraint firstAttribute="width" constant="240" id="eO6-Zj-ynu"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iuD-fd-3c9">
+                    <rect key="frame" x="104" y="144" width="46" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="answerClicked:" destination="-1" eventType="touchUpInside" id="2eU-yP-iUS"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tmb-2v-biE">
+                    <rect key="frame" x="104" y="104" width="46" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="answerClicked:" destination="-1" eventType="touchUpInside" id="FKM-mx-CmY"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmC-GH-1VH">
+                    <rect key="frame" x="200" y="144" width="46" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="answerClicked:" destination="-1" eventType="touchUpInside" id="w8e-93-PKX"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uhu-K5-5KC">
+                    <rect key="frame" x="200" y="104" width="46" height="30"/>
+                    <state key="normal" title="Button">
+                        <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </state>
+                    <connections>
+                        <action selector="answerClicked:" destination="-1" eventType="touchUpInside" id="oGi-7d-amm"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="JPr-qr-Eza" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="0th-qS-ivj"/>
+                <constraint firstItem="JPr-qr-Eza" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="60" id="4il-Lq-RGr"/>
+                <constraint firstItem="FmC-GH-1VH" firstAttribute="top" secondItem="Uhu-K5-5KC" secondAttribute="bottom" constant="10" id="6Aj-Ga-8qT"/>
+                <constraint firstItem="iuD-fd-3c9" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="-49" id="Ie0-Zu-g4h"/>
+                <constraint firstItem="FmC-GH-1VH" firstAttribute="baseline" secondItem="iuD-fd-3c9" secondAttribute="baseline" id="KaQ-0P-F4l"/>
+                <constraint firstItem="FmC-GH-1VH" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="47" id="LDy-Iy-Ofa"/>
+                <constraint firstItem="tmb-2v-biE" firstAttribute="baseline" secondItem="Uhu-K5-5KC" secondAttribute="baseline" id="VTp-tu-LK7"/>
+                <constraint firstItem="tmb-2v-biE" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="-49" id="Vf2-hd-47l"/>
+                <constraint firstItem="Uhu-K5-5KC" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" constant="47" id="uJW-gO-spZ"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="FmC-GH-1VH" secondAttribute="bottom" constant="64" id="x6v-ue-fxM"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="20.800000000000001" y="191.6041979010495"/>
+        </view>
+    </objects>
+</document>
