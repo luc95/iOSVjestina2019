@@ -8,19 +8,10 @@
 import Foundation
 import UIKit
 
-enum Category {
+enum Category: String {
     
-    case sports
-    case science
-    
-    var text: String {
-        switch self {
-        case .sports:
-            return "SPORTS"
-        case .science:
-            return "SCIENCE"
-        }
-    }
+    case sports = "SPORTS"
+    case science = "SCIENCE"
     
     var color: UIColor {
         switch self {
@@ -31,14 +22,4 @@ enum Category {
         }
     }
     
-    static func getCategory(text: String) -> Category? {
-        switch text {
-            case "SPORTS":
-                return .sports
-            case "SCIENCE":
-                return .science
-            default:
-                return nil
-        }
-    }
 }

@@ -23,6 +23,7 @@ struct Quiz {
             let title = jsonDict["title"] as? String,
             let description = jsonDict["description"] as? String,
             let categoryText = jsonDict["category"] as? String,
+            let category = Category(rawValue: categoryText),
             let level = jsonDict["level"] as? Int,
             let imageUrl = jsonDict["image"] as? String,
             let questions = jsonDict["questions"] as? [Any] {
@@ -30,13 +31,7 @@ struct Quiz {
             self.id = id
             self.title = title
             self.description = description
-            
-            if let category = Category.getCategory(text: categoryText) {
-                self.category = category
-            } else {
-                return nil
-            }
-            
+            self.category = category
             self.level = level
             self.imageUrl = imageUrl
             self.questions = questions.compactMap{ Question(json: $0) }
