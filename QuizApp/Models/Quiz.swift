@@ -11,10 +11,10 @@ struct Quiz {
     
     let id: Int
     let title: String
-    let description: String
+    let description: String?
     let category: Category
     let level: Int
-    let imageUrl: String
+    let imageUrl: String?
     let questions: [Question]
     
     init?(json: Any) {

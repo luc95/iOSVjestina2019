@@ -10,72 +10,106 @@ import UIKit
 class QuizViewController: UIViewController {
     
     private final let quizService = QuizService()
-    var questionView: QuestionView?
+
+    var viewModel: QuizViewModel!
     
-    @IBOutlet weak var fetchButton: UIButton!
-    @IBOutlet weak var funFactLabel: UILabel!
+    var answers: [Bool] = []
+    var startTime: Date?
+    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var quizImageView: UIImageView!
-    @IBOutlet weak var questionViewContainer: UIView!
+    @IBOutlet weak var startQuizButton: UIButton!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     
-    @IBAction func fetchData(_ sender: UIButton) {
-        quizService.fetchQuizzes(completion: { (quizzes) in
-            DispatchQueue.main.async {
-                if let quizzes = quizzes {
-                    self.setFunFactLabel(quizzes: quizzes)
-                    
-                    let quiz = quizzes.randomElement()
-                    self.setQuizData(quiz: quiz)
-                    
-                    let question = quiz?.questions.randomElement()
-                    self.setQuestionData(question: question)
-                } else {
-                    self.showError(message: "Error occured while fetching data...")
-
-                }
-            }
-        })
+    convenience init(viewModel: QuizViewModel) {
+        self.init()
+        self.viewModel = viewModel
     }
     
-    private func setFunFactLabel(quizzes: [Quiz]) {
-        let noOfNBAQuestions = (quizzes.map{ $0.questions }.flatMap{ $0 }.filter{ $0.question.contains("NBA")}).count
-        
-        self.funFactLabel.text = "FUN FACT: There are \(noOfNBAQuestions) questions that contain the word NBA in it!"
-        self.funFactLabel.sizeToFit()
-//        self.funFactLabel.lineBreakMode = .byWordWrapping
-//        self.funFactLabel.numberOfLines = 3
-        self.funFactLabel.center.x = self.view.center.x
-
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        populateView()
     }
     
-    private func setQuizData(quiz: Quiz?) {
-        self.titleLabel.text = quiz?.title
-        self.titleLabel.sizeToFit()
-        self.titleLabel.backgroundColor = quiz?.category.color
-        self.titleLabel.center.x = self.view.center.x
+    @IBAction func startQuizClicked(_ sender: Any) {
+        self.navigationItem.setHidesBackButton(true, animated: true)
+        scrollView.isHidden = false
+        startQuizButton.isEnabled = false
+        startTime = Date()
+    }
+    
+    private func populateView() {
+        self.navigationItem.title = viewModel.title
+        self.titleLabel.text = viewModel.title
         
-        if let imageURL = quiz?.imageUrl {
+        if let imageURL = viewModel.imageUrl {
             quizService.fetchQuizImage(urlString: imageURL, completion: {(image) in
                 DispatchQueue.main.async {
                     if let image = image {
                         self.quizImageView.image = image
-                        self.quizImageView.center.x = self.view.center.x
                     }
                 }
             })
         }
         
+        let scrollViewWidth = self.scrollView.frame.width
+        let totalWidth = scrollViewWidth * CGFloat(viewModel.numberOfQuestions)
+        scrollView.contentSize = CGSize(width: totalWidth, height: self.scrollView.frame.height)
+        
+        viewModel.questions.enumerated().forEach {
+            let offset = scrollViewWidth * CGFloat($0)
+            let questionView = QuestionView(frame: CGRect(origin: CGPoint(x: offset, y: 0), size: scrollView.frame.size))
+            questionView.fillWithData(question: $1)
+            questionView.delegate = self
+            scrollView.addSubview(questionView)
+        }
     }
     
-    private func setQuestionData(question: Question?) {
-        if self.questionViewContainer.subviews.count == 0 {
-            self.questionView = QuestionView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize (width: 250, height: 300)))
+    private func postQuizResults() {
+        let quizId = viewModel.id
+        let numberOfCorrectAnswers = answers.filter{$0}.count
+        var totalTime = Double(Date().timeIntervalSince(startTime!))
+        totalTime = (totalTime * 10000).rounded() / 10000
+        
+        let quizResult = "Score: \(numberOfCorrectAnswers)/\(viewModel.numberOfQuestions). Finished in \(totalTime) secs."
+        
+        quizService.postQuizResults(
+            quizId: quizId,
+            time: totalTime,
+            numberOfCorrectAnswers: numberOfCorrectAnswers,
+            completion: { (httpStatusCode) in
+                if let httpStatusCode = httpStatusCode {
+                    self.showAlert(httpStatusCode: httpStatusCode, quizResult: quizResult)
+                } else {
+                    self.showError(message: "Internal server error")
+                }
         }
-        if let questionView = self.questionView {
-            self.questionViewContainer.addSubview(questionView)
-            questionView.question = question
+        )
+    }
+    
+    private func showAlert(httpStatusCode: HttpStatusCode, quizResult: String) {
+        var title: String = quizResult
+        var actions: [UIAlertAction] = []
+        
+        let cancelAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) {
+                self.navigationController?.popViewController(animated: true)
+            }
         }
+        actions.append(cancelAction)
+        
+        if httpStatusCode != HttpStatusCode.OK {
+            let tryAgainAction = UIAlertAction(title: "Try again", style: .default) { (_) in
+                self.postQuizResults()
+            }
+            actions.append(tryAgainAction)
+            title = httpStatusCode.name
+        }
+        
+        let alertController = UIAlertController(title: title, message: httpStatusCode.message, preferredStyle: .alert)
+        actions.forEach { alertController.addAction($0) }
+        self.present(alertController, animated: true, completion: nil)
     }
     
     private func showError(message: String) {
@@ -102,5 +136,19 @@ class QuizViewController: UIViewController {
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
         })
+    }
+}
+
+extension QuizViewController: QuestionViewDelegate {
+    
+    func questionAnswered(isCorrectAnswer: Bool) {
+        answers.append(isCorrectAnswer)
+        
+        if answers.count == viewModel.numberOfQuestions {
+            postQuizResults()
+        } else {
+            let offset = scrollView.frame.width * CGFloat(answers.count)
+            scrollView.setContentOffset(CGPoint(x: offset, y: 0), animated: true)
+        }
     }
 }

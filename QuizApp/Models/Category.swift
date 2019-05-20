@@ -5,10 +5,9 @@
 //  Created by Luc on 11/04/2019.
 //
 
-import Foundation
 import UIKit
 
-enum Category: String {
+enum Category: String, CaseIterable {
     
     case sports = "SPORTS"
     case science = "SCIENCE"
@@ -21,5 +20,5 @@ enum Category: String {
                 return UIColor.green
         }
     }
-    
+
 }

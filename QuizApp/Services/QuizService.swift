@@ -10,8 +10,9 @@ import UIKit
 
 class QuizService {
     
-    let quizzesDataURL = "https://iosquiz.herokuapp.com/api/quizzes"
-    
+    private final let quizzesDataURL = "https://iosquiz.herokuapp.com/api/quizzes"
+    private final let resultURLString = "https://iosquiz.herokuapp.com/api/result"
+
     func fetchQuizzes(completion: @escaping ([Quiz]?) -> Void) {
         if let url = URL(string: quizzesDataURL) {
             let urlRequest = URLRequest(url: url)
@@ -53,4 +54,35 @@ class QuizService {
             dataTask.resume()
         }
     }
+    
+    func postQuizResults(quizId: Int, time: Double, numberOfCorrectAnswers: Int,
+                        completion: @escaping ((HttpStatusCode?) -> Void)) {
+        if let url = URL(string: resultURLString) {
+            var request = URLRequest(url: url)
+            
+            if let accessToken = LoginUtils.getAccessToken() {
+                request.addValue(accessToken, forHTTPHeaderField: "Authorization")
+            }
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpMethod = "POST"
+            
+            let parameters: [String: Any] = [
+                "quiz_id": quizId, "user_id": LoginUtils.getUserID(),
+                "time": time, "no_of_correct": numberOfCorrectAnswers
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: parameters)
+            
+            let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("statusCode: \(httpResponse.statusCode)")
+                    completion(HttpStatusCode(rawValue: httpResponse.statusCode))
+                }
+            }
+            dataTask.resume()
+        } else {
+            completion(nil)
+        }
+    }
+    
+    
 }
