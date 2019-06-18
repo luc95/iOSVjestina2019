@@ -12,6 +12,7 @@ class QuizService {
     
     private final let quizzesDataURL = "https://iosquiz.herokuapp.com/api/quizzes"
     private final let resultURLString = "https://iosquiz.herokuapp.com/api/result"
+    private final let leaderboardUrlString = "https://iosquiz.herokuapp.com/api/score?quiz_id="
 
     func fetchQuizzes(completion: @escaping ([Quiz]?) -> Void) {
         if let url = URL(string: quizzesDataURL) {
@@ -23,7 +24,7 @@ class QuizService {
                         let jsonResponse = try JSONSerialization.jsonObject(with: dataResponse, options: [])
                         if let jsonRoot = jsonResponse as? [String: Any],
                             let quizzesResponse = jsonRoot["quizzes"] as? [Any] {
-                            let quizzes = quizzesResponse.compactMap{ Quiz(json: $0) }
+                            let quizzes = quizzesResponse.compactMap(Quiz.createFrom)
                             completion(quizzes)
                         } else {
                             completion(nil)
@@ -36,6 +37,8 @@ class QuizService {
                 }
             }
             dataTask.resume()
+        } else {
+            completion(nil)
         }
     }
     
@@ -84,5 +87,36 @@ class QuizService {
         }
     }
     
+    func fetchScores(forQuiz id: Int, completion: @escaping (([Score]?) -> Void)) {
+        if let url = URL(string: leaderboardUrlString + "\(id)") {
+            var request = URLRequest(url: url)
+            
+            if let accessToken = LoginUtils.getAccessToken() {
+                request.addValue(accessToken, forHTTPHeaderField: "Authorization")
+            }
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let dataTask = URLSession.shared.dataTask(with: request) { (data, response, error) in
+                if let data = data {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        if let jsonDict = json as? [Any] {
+                            let scores = jsonDict.compactMap(Score.init)
+                            completion(scores)
+                        } else {
+                            completion(nil)
+                        }
+                    } catch {
+                        completion(nil)
+                    }
+                } else {
+                    completion(nil)
+                }
+            }
+            dataTask.resume()
+        } else {
+            completion(nil)
+        }
+    }
     
 }

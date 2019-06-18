@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol QuizViewControllerDelegate: class {
+    func leaderboardClicked(quiz id: Int)
+}
+
 class QuizViewController: UIViewController {
+    
+    weak var delegate: QuizViewControllerDelegate?
     
     private final let quizService = QuizService()
 
@@ -41,6 +47,7 @@ class QuizViewController: UIViewController {
     
     private func populateView() {
         self.navigationItem.title = viewModel.title
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "leaderboard"), style: .plain, target: self, action: #selector(leaderboardClicked))
         self.titleLabel.text = viewModel.title
         
         if let imageURL = viewModel.imageUrl {
@@ -64,6 +71,10 @@ class QuizViewController: UIViewController {
             questionView.delegate = self
             scrollView.addSubview(questionView)
         }
+    }
+    
+    @objc func leaderboardClicked(sender: AnyObject){
+        self.delegate?.leaderboardClicked(quiz: viewModel.id)
     }
     
     private func postQuizResults() {

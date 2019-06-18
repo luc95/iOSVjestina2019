@@ -24,7 +24,7 @@ class QuizViewModel {
     }
     
     public var description: String? {
-        return quiz?.description
+        return quiz?.desc
     }
     
     public var imageUrl: String? {

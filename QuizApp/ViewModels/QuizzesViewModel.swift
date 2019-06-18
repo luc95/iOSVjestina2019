@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 struct QuizCellModel {
     
@@ -16,7 +17,7 @@ struct QuizCellModel {
     
     init(quiz: Quiz) {
         self.title = quiz.title
-        self.description = quiz.description ?? ""
+        self.description = quiz.desc ?? ""
         self.level = String(repeating: "*", count: quiz.level)
         self.imageURL = quiz.imageUrl ?? ""
     }
@@ -25,6 +26,16 @@ struct QuizCellModel {
 class QuizzesViewModel {
     
     private var quizzes: [Quiz]?
+    private var isFetched: Bool = false
+    
+    lazy var frc: NSFetchedResultsController<Quiz> = {
+        let request: NSFetchRequest<Quiz> = Quiz.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "nsmTitle", ascending: true)]
+        
+        let context = DataController.shared.persistentContainer.viewContext
+        
+        return NSFetchedResultsController<Quiz>(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+    }()
     
     public func numberOfQuizzes(category: Category) -> Int {
         return quizzesByCategory(category: category)?.count ?? 0
@@ -51,10 +62,33 @@ class QuizzesViewModel {
     }
     
     public func fetchQuizzes(completion: @escaping () -> Void) {
-        QuizService().fetchQuizzes(completion: { [weak self] (quizzes) in
-            self?.quizzes = quizzes
-            completion()
+        if Reachability.isConnectedToNetwork() && !self.isFetched {
+            QuizService().fetchQuizzes(completion: { [weak self] (quizzes) in
+                self?.quizzes = quizzes
+                self?.isFetched = true
+                completion()
         })
+        } else {
+            self.quizzes = DataController.shared.fetchQuizzes()
+            completion()
+        }
+    }
+    
+    public func fetchQuizzes(filter: String, completion: @escaping () -> Void) {
+        let predicateFormat = "nsmTitle CONTAINS[c] %@ OR nsmDescription CONTAINS[c] %@"
+        frc.fetchRequest.predicate = filter.isEmpty ? nil :
+            NSPredicate(format: predicateFormat, filter, filter)
+        
+        do {
+            try frc.performFetch()
+        } catch {
+            print("Fetch did not succeed")
+        }
+        
+        if let quizzes = frc.fetchedObjects {
+            self.quizzes = quizzes
+        }
+        completion()
     }
     
 }

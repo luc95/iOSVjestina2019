@@ -21,8 +21,6 @@ class QuizzesTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "Quizzes"
-
         viewModel.fetchQuizzes {
             self.refresh()
         }
@@ -74,7 +72,16 @@ class QuizzesTableViewController: UITableViewController {
         
         if let quizViewModel = self.viewModel.quizViewModel(forIndexPath: indexPath) {
             let quizViewController = QuizViewController(viewModel: quizViewModel)
+            quizViewController.delegate = self
             navigationController?.pushViewController(quizViewController, animated: true)
         }
+    }
+}
+
+extension QuizzesTableViewController: QuizViewControllerDelegate {
+    func leaderboardClicked(quiz id: Int) {
+        let leaderboardVC = LeaderboardTableViewController(viewModel: LeaderboardViewModel(quizId: id))
+        let leaderboardNVC = UINavigationController(rootViewController: leaderboardVC)
+        self.present(leaderboardNVC, animated: true, completion: nil)
     }
 }

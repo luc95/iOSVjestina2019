@@ -41,7 +41,7 @@
                         <color key="textColor" red="1" green="0.49327188729999999" blue="0.47399842739999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P1c-yx-1Ja" userLabel="Description Label">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P1c-yx-1Ja" userLabel="Description Label">
                         <rect key="frame" x="132" y="41.5" width="330" height="12"/>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -52,8 +52,8 @@
                     <constraint firstItem="gjr-ij-LF9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="ATa-CK-WkQ"/>
                     <constraint firstItem="C81-Di-eaZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="Eyn-54-rpv"/>
                     <constraint firstItem="C81-Di-eaZ" firstAttribute="leading" secondItem="H0e-ed-MRv" secondAttribute="trailing" constant="16" id="MIm-PL-FFq"/>
-                    <constraint firstItem="P1c-yx-1Ja" firstAttribute="leading" secondItem="gjr-ij-LF9" secondAttribute="trailing" constant="16" id="Yp9-HP-a1a"/>
                     <constraint firstAttribute="trailing" secondItem="C81-Di-eaZ" secondAttribute="trailing" constant="8" id="a6X-2t-xMQ"/>
+                    <constraint firstItem="P1c-yx-1Ja" firstAttribute="leading" secondItem="H0e-ed-MRv" secondAttribute="leading" id="bjh-Un-TVu"/>
                     <constraint firstItem="gjr-ij-LF9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="ctV-J4-Aip"/>
                     <constraint firstItem="H0e-ed-MRv" firstAttribute="leading" secondItem="gjr-ij-LF9" secondAttribute="trailing" constant="16" id="dZS-US-olZ"/>
                     <constraint firstAttribute="bottom" secondItem="gjr-ij-LF9" secondAttribute="bottom" constant="16" id="fae-9T-Ls1"/>

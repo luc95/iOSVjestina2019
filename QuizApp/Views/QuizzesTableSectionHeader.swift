@@ -19,12 +19,14 @@ class QuizzesTableSectionHeader: UIView {
         self.init(frame: CGRect(x: 0, y: 0, width: 100, height: 30))
         titleLabel = UILabel()
         titleLabel.text = title
+        titleLabel.sizeToFit()
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         titleLabel.textColor = UIColor.black
-        titleLabel.center = self.center
-
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(titleLabel)
-        
+        titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+
         backgroundColor = color
 
     }

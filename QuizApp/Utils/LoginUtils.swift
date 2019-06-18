@@ -11,10 +11,12 @@ struct Credentials {
     
     var accessToken: String?
     var userID: Int?
+    var username: String?
     
-    init(accessToken: String, userID: Int) {
+    init(accessToken: String, userID: Int, username: String) {
         self.accessToken = accessToken
         self.userID = userID
+        self.username = username
     }
 }
 
@@ -22,6 +24,7 @@ class LoginUtils {
     
     private static let TOKEN_KEY = "accessToken"
     private static let USER_ID = "userID"
+    private static let USERNAME = "username"
     
     static func getUserID() -> Int {
         return UserDefaults.standard.integer(forKey: USER_ID)
@@ -31,6 +34,10 @@ class LoginUtils {
         return UserDefaults.standard.string(forKey: TOKEN_KEY)
     }
     
+    static func getUsername() -> String? {
+        return UserDefaults.standard.string(forKey: USERNAME)
+    }
+    
     static func isUserLoggedIn() -> Bool {
         return getAccessToken() != nil
     }
@@ -38,8 +45,13 @@ class LoginUtils {
     static func loginUser(credentials: Credentials) {
         UserDefaults.standard.set(credentials.accessToken, forKey: TOKEN_KEY)
         UserDefaults.standard.set(credentials.userID, forKey: USER_ID)
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.navigateToQuizzesViewController()
+        UserDefaults.standard.set(credentials.username, forKey: USERNAME)
+    }
+    
+    static func logoutUser() {
+        UserDefaults.standard.removeObject(forKey: TOKEN_KEY)
+        UserDefaults.standard.removeObject(forKey: USER_ID)
+        UserDefaults.standard.removeObject(forKey: USERNAME)
     }
     
 }

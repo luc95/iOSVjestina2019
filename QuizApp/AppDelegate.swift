@@ -12,14 +12,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    let loginViewController = LoginViewController()
     let quizzesViewController = QuizzesTableViewController(viewModel: QuizzesViewModel())
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         window = UIWindow(frame: UIScreen.main.bounds)
         
-        let rootViewController = LoginUtils.isUserLoggedIn() ? UINavigationController(rootViewController: quizzesViewController) : loginViewController
+        let rootViewController = LoginUtils.isUserLoggedIn() ? TabBarViewController() : LoginViewController()
         
         window?.rootViewController = rootViewController
         
@@ -28,8 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func navigateToQuizzesViewController() {
-        window?.rootViewController = UINavigationController(rootViewController: quizzesViewController)
+    func navigateToTabBarViewController() {
+        window?.rootViewController = TabBarViewController()
+    }
+    
+    func navigateToLoginViewController() {
+        self.window?.rootViewController = LoginViewController()
     }
     
 }
